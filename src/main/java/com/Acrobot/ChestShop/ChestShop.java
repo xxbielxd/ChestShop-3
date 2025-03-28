@@ -145,7 +145,12 @@ public class ChestShop extends JavaPlugin {
     public void onEnable() {
         bStats = new Metrics(this, 1109);
         audiences = BukkitAudiences.create(this);
+
+
         turnOffDatabaseLogging();
+
+        Configuration.pairFileAndClass(new File(getDataFolder(), "config.yml"), Properties.class);
+
         if (!handleMigrations()) {
             return;
         }

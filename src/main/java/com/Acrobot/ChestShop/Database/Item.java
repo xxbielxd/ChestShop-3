@@ -8,7 +8,7 @@ import com.j256.ormlite.table.DatabaseTable;
  * @author Andrzej Pomirski
  */
 @DatabaseTable(tableName = "items")
-@DatabaseFileName("items.db")
+
 public class Item {
 
     @DatabaseField(canBeNull = false, generatedId = true)

@@ -13,7 +13,6 @@ import java.util.UUID;
  * @author Andrzej Pomirski (Acrobot)
  */
 @DatabaseTable(tableName = "accounts")
-@DatabaseFileName("users.db")
 public class Account {
 
     @DatabaseField(index = true, canBeNull = false, uniqueCombo = true)

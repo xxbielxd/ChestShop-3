@@ -30,6 +30,12 @@ public class Migrations {
         }
 
         switch (currentVersion) {
+            case 0:
+                if (migrateTo1()) {
+                    currentVersion++;
+                } else {
+                    return -1;
+                }
             case 1:
                 if (migrateTo2()) {
                     currentVersion++;
@@ -57,16 +63,24 @@ public class Migrations {
             case 5:
             default:
                 break;
-                //do nothing
         }
 
         return currentVersion;
     }
 
+    private static boolean migrateTo1() {
+        try {
+            Dao<Account, String> accounts = DaoCreator.getDaoAndCreateTable(Account.class);
+            return true;
+        } catch (SQLException e) {
+            ChestShop.getBukkitLogger().log(Level.SEVERE, "Error while migrating database to v1", e);
+            return false;
+        }
+    }
+
     private static boolean migrateTo2() {
         try {
             Dao<Account, String> accounts = DaoCreator.getDao(Account.class);
-
             accounts.executeRaw("ALTER TABLE `accounts` ADD COLUMN lastSeenName VARCHAR");
             return true;
         } catch (SQLException e) {
@@ -117,7 +131,7 @@ public class Migrations {
                 try {
                     results.close();
                 } catch (Exception e1) {
-                    ChestShop.getBukkitLogger().log(Level.WARNING, "Error while closing results! " + e.getMessage());
+                    ChestShop.getBukkitLogger().log(Level.WARNING, "Error while closing results! " + e1.getMessage());
                 }
                 ChestShop.getBukkitLogger().log(Level.INFO, success + " accounts successfully migrated. " + error + " accounts failed to migrate!");
             }
@@ -140,7 +154,7 @@ public class Migrations {
 
             long start = System.currentTimeMillis();
             try {
-                items.executeRawNoArgs("INSERT INTO `items` (id, code) SELECT id, code uuid FROM `items-old`");
+                items.executeRawNoArgs("INSERT INTO `items` (id, code) SELECT id, code FROM `items-old`");
             } catch (SQLException e) {
                 ChestShop.getBukkitLogger().log(Level.SEVERE, "Error while inserting items into new database while migrating to v4", e);
             }
@@ -159,8 +173,13 @@ public class Migrations {
             accounts.executeRaw("ALTER TABLE `accounts` ADD COLUMN ignoreMessages BOOLEAN");
             return true;
         } catch (SQLException e) {
+            if (e.getMessage().contains("Duplicate column name") || e.getMessage().contains("already exists")) {
+                ChestShop.getBukkitLogger().warning("Column 'ignoreMessages' already exists. Skipping.");
+                return true;
+            }
             ChestShop.getBukkitLogger().log(Level.SEVERE, "Error while migrating database to v5", e);
             return false;
         }
     }
+
 }

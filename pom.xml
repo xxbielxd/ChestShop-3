@@ -351,7 +351,16 @@
             <version>2.10-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
+
+        <dependency>
+            <groupId>io.papermc.paper</groupId>
+            <artifactId>paper-api</artifactId>
+            <version>1.21.4-R0.1-SNAPSHOT</version> <!-- ou a versão do seu servidor -->
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
+
+
 
     <build>
         <finalName>${project.name}</finalName>

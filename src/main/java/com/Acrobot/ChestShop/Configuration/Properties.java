@@ -340,4 +340,24 @@ public class Properties {
     @PrecededBySpace
     @ConfigurationComment("Add stock counter to quantity line?")
     public static boolean USE_STOCK_COUNTER = false;
+
+    @PrecededBySpace
+    @ConfigurationComment("Database type: 'sqlite' or 'mysql'")
+    public static String DATABASE_TYPE = "sqlite";
+
+    @ConfigurationComment("MySQL hostname")
+    public static String MYSQL_HOST = "localhost";
+
+    @ConfigurationComment("MySQL port")
+    public static int MYSQL_PORT = 3306;
+
+    @ConfigurationComment("MySQL database name")
+    public static String MYSQL_DATABASE = "chestshop";
+
+    @ConfigurationComment("MySQL username")
+    public static String MYSQL_USERNAME = "root";
+
+    @ConfigurationComment("MySQL password")
+    public static String MYSQL_PASSWORD = "";
+
 }

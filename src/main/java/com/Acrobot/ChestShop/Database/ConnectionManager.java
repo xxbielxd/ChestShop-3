@@ -1,14 +1,26 @@
 package com.Acrobot.ChestShop.Database;
 
+import com.Acrobot.ChestShop.Configuration.Properties;
+
 import java.io.File;
 
-/**
- * @author Andrzej Pomirski (Acrobot)
- */
 public class ConnectionManager {
-    private static final String URI_STRING = "jdbc:sqlite:%s";
 
     public static String getURI(File databaseFile) {
-        return String.format(URI_STRING, databaseFile.getAbsolutePath());
+        String type = Properties.DATABASE_TYPE;
+
+        if ("mysql".equalsIgnoreCase(type)) {
+            return String.format(
+                    "jdbc:mysql://%s:%d/%s?user=%s&password=%s",
+                    Properties.MYSQL_HOST,
+                    Properties.MYSQL_PORT,
+                    Properties.MYSQL_DATABASE,
+                    Properties.MYSQL_USERNAME,
+                    Properties.MYSQL_PASSWORD
+            );
+        }
+
+        // Fallback para SQLite
+        return String.format("jdbc:sqlite:%s", databaseFile.getAbsolutePath());
     }
 }
