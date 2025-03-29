@@ -353,7 +353,7 @@ public class NameManager implements Listener {
             }
         }
         try {
-            accounts = DaoCreator.getDaoAndCreateTable(Account.class);
+            accounts = DaoCreator.getSafeDao(Account.class, "accounts_uuid_idx");
 
             try {
                 adminAccount = new Account(Properties.ADMIN_SHOP_NAME, Bukkit.getOfflinePlayer(Properties.ADMIN_SHOP_NAME).getUniqueId());

@@ -30,12 +30,6 @@ public class Migrations {
         }
 
         switch (currentVersion) {
-            case 0:
-                if (migrateTo1()) {
-                    currentVersion++;
-                } else {
-                    return -1;
-                }
             case 1:
                 if (migrateTo2()) {
                     currentVersion++;
@@ -68,16 +62,6 @@ public class Migrations {
         return currentVersion;
     }
 
-    private static boolean migrateTo1() {
-        try {
-            Dao<Account, String> accounts = DaoCreator.getDaoAndCreateTable(Account.class);
-            return true;
-        } catch (SQLException e) {
-            ChestShop.getBukkitLogger().log(Level.SEVERE, "Error while migrating database to v1", e);
-            return false;
-        }
-    }
-
     private static boolean migrateTo2() {
         try {
             Dao<Account, String> accounts = DaoCreator.getDao(Account.class);
@@ -94,7 +78,7 @@ public class Migrations {
             Dao<Account, String> accountsOld = DaoCreator.getDao(Account.class);
             accountsOld.executeRawNoArgs("ALTER TABLE `accounts` RENAME TO `accounts-old`");
 
-            Dao<Account, String> accounts = DaoCreator.getDaoAndCreateTable(Account.class);
+            Dao<Account, String> accounts = DaoCreator.getSafeDao(Account.class, "accounts_uuid_idx");
 
             long start = System.currentTimeMillis();
             try {
@@ -150,7 +134,8 @@ public class Migrations {
 
             itemsOld.executeRawNoArgs("ALTER TABLE `items` RENAME TO `items-old`");
 
-            Dao<Item, Integer> items = DaoCreator.getDaoAndCreateTable(Item.class);
+            Dao<Item, Integer> items = DaoCreator.getSafeDao(Item.class, "items_code_idx");
+
 
             long start = System.currentTimeMillis();
             try {

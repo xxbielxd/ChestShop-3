@@ -41,7 +41,7 @@ public class ItemDatabase {
         yaml = new Yaml(new YamlBukkitConstructor(), new YamlRepresenter(), new DumperOptions());
 
         try {
-            itemDao = DaoCreator.getDaoAndCreateTable(Item.class);
+            itemDao = DaoCreator.getSafeDao(Item.class, "items_code_idx");
             handleMetadataUpdate();
         } catch (SQLException e) {
             ChestShop.getBukkitLogger().log(Level.SEVERE, "Error while loading items database", e);
